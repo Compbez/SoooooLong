@@ -1,0 +1,83 @@
+#include <iostream.h>
+#include <stdio.h>
+#include <conio.h>
+
+using namespace std;
+
+int main()
+{
+    FILE *f1;
+    FILE *f2;
+    char *Number1, *InvertNumber1, *Number2, *InvertNumber2, *Result;
+    int MaxLenght, MinLenght;
+    char k=0;
+    FILE *f3;
+    f1=fopen("1stNumb.txt", "r");
+    f2=fopen("2ndNumb.txt", "r");
+    f3=fopen("ResultNumb.txt", "w");
+    fseek(f1, 0, SEEK_END);
+    int File1Size=ftell(f1);
+    rewind(f1);
+    fseek(f2, 0, SEEK_END);
+    int File2Size=ftell(f2);
+    rewind(f2);
+    if(File2Size>File1Size)
+    {
+                           MaxLenght=File2Size;
+                           MinLenght=File1Size;
+    }
+    else
+    {
+        MaxLenght=File1Size;
+        MinLenght=File2Size;
+    }
+    Number1 = new char [MaxLenght];
+    InvertNumber1 = new char [MaxLenght];
+    for(int i=0; i<File1Size; ++i)
+            fscanf(f1, "%c", &Number1[i]);
+    for(int i=0; i<File1Size; ++i)
+            InvertNumber1[i]=Number1[File1Size-1-i];
+    Number2 = new char [MaxLenght];
+    InvertNumber2 = new char [MaxLenght];
+    for(int i=0; i<File2Size; ++i)
+            fscanf(f2, "%c", &Number2[i]);
+    for(int i=0; i<File2Size; ++i)
+            InvertNumber2[i]=Number2[File2Size-1-i];
+    if(File2Size>File1Size)
+                           for(int i=0; i<MaxLenght; ++i)
+                           {
+                                   Number1[i]=InvertNumber1[i];
+                                   InvertNumber1[i]=InvertNumber2[i];
+                                   InvertNumber2[i]=Number1[i];
+                           }
+    Result = new char [File1Size+1];
+    for(int i=0; i<MinLenght; ++i)
+    {
+            Result[i] = InvertNumber1[i]-48 + InvertNumber2[i] + k;
+            if(Result[i]>57)
+            {
+                           Result[i]=Result[i]-10;
+                           k=1;
+            }
+            else
+            k=0;
+    }
+    for(int i=MinLenght; i<MaxLenght; ++i)
+    {
+            Result[i]=InvertNumber1[i]+k;
+            cout<<"yap"<<endl;
+            if(Result[i]>57)
+            {
+                           Result[i]=Result[i]-10;
+                           k=1;
+            }
+            else
+            k=0;
+    }
+    for(int i=0; i<MaxLenght; ++i)
+            Number1[i]=Result[MaxLenght-1-i];
+    for(int i=0; i<MaxLenght; ++i)
+            fprintf(f3, "%c", Number1[i]);
+    system("pause");
+    return 0;
+}
