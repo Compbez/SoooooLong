@@ -50,7 +50,7 @@ int main()
                                    InvertNumber1[i]=InvertNumber2[i];
                                    InvertNumber2[i]=Number1[i];
                            }
-    Result = new char [File1Size+1];
+    Result = new char [MaxLenght+1];
     for(int i=0; i<MinLenght; ++i)
     {
             Result[i] = InvertNumber1[i]-48 + InvertNumber2[i] + k;
@@ -62,22 +62,32 @@ int main()
             else
             k=0;
     }
-    for(int i=MinLenght; i<MaxLenght; ++i)
+    if(MaxLenght==MinLenght)
     {
-            Result[i]=InvertNumber1[i]+k;
-            cout<<"yap"<<endl;
-            if(Result[i]>57)
-            {
-                           Result[i]=Result[i]-10;
-                           k=1;
-            }
-            else
-            k=0;
+                            Result[MaxLenght]=k+48;
+                            for(int i=0; i<=MaxLenght; ++i)
+                                       Number1[i]=Result[MaxLenght-i];
+                            for(int i=0; i<=MaxLenght; ++i)
+                                    fprintf(f3, "%c", Number1[i]);
     }
-    for(int i=0; i<MaxLenght; ++i)
-            Number1[i]=Result[MaxLenght-1-i];
-    for(int i=0; i<MaxLenght; ++i)
-            fprintf(f3, "%c", Number1[i]);
+    else
+    {
+        for(int i=MinLenght; i<MaxLenght; ++i)
+        {
+                 Result[i]=InvertNumber1[i]+k;
+                 if(Result[i]>57)
+                 {
+                                 Result[i]=Result[i]-10;
+                                 k=1;
+                                 }
+                                 else
+                                 k=0;
+        }
+        for(int i=0; i<MaxLenght; ++i)
+                Number1[i]=Result[MaxLenght-i-1];
+        for(int i=0; i<MaxLenght; ++i)
+                fprintf(f3, "%c", Number1[i]);
+    }
     system("pause");
     return 0;
 }
