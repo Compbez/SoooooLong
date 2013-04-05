@@ -1,0 +1,86 @@
+#include <iostream.h>
+
+using namespace std;
+
+int main()
+{
+    FILE *f1;
+    FILE *f2;
+    char *Number1, *Number2, *Result, *Result2, PreResult, *InvertNumber1, *InvertNumber2;
+    int MaxLenght, MinLenght, j;
+    char k=0, k2=0;
+    FILE *f3;
+    f1=fopen("1stNumb.txt", "r");
+    f2=fopen("2ndNumb.txt", "r");
+    f3=fopen("ResultNumb.txt", "w");
+    fseek(f1, 0, SEEK_END);
+    int File1Size=ftell(f1);
+    rewind(f1);
+    fseek(f2, 0, SEEK_END);
+    int File2Size=ftell(f2);
+    rewind(f2);
+    if(File2Size>File1Size)
+    {
+                           MaxLenght=File2Size;
+                           MinLenght=File1Size;
+    }
+    else
+    {
+        MaxLenght=File1Size;
+        MinLenght=File2Size;
+    }
+    Number1 = new char [MaxLenght];
+    for(int i=0; i<File1Size; ++i)
+            fscanf(f1, "%c", &Number1[i]);
+    Number2 = new char [MaxLenght];
+    for(int i=0; i<File2Size; ++i)
+            fscanf(f2, "%c", &Number2[i]);
+    if(File2Size>File1Size)
+                           for(int i=0; i<MaxLenght; ++i)
+                           {
+                                   PreResult=Number1[i];
+                                   Number1[i]=Number2[i];
+                                   Number2[i]=PreResult;
+                           }
+    Result = new char [MaxLenght*2];
+    Result2 = new char [MaxLenght*2];
+    for(int i=0; i<MaxLenght*2; ++i)
+    {
+            Result[i]=0;
+            Result2[i]=0;
+    }
+    
+    InvertNumber1 = new char [MaxLenght];
+    InvertNumber2 = new char [MaxLenght];
+    for(int i=0; i<File1Size; ++i)
+            InvertNumber1[i]=Number1[File1Size-1-i];
+    for(int i=0; i<File2Size; ++i)
+            InvertNumber2[i]=Number2[File2Size-1-i];
+    for(int i=0; i<MinLenght; ++i)
+    {
+            k=0;
+            k2=0;
+            for(j=0; j<MaxLenght; ++j)
+            {
+                    Result[i+j]=(InvertNumber1[j]-48)*(InvertNumber2[i]-48)+k;
+                    Result2[i+j]=Result2[i+j]+Result[i+j]%10+k2;
+                    k=Result[i+j]/10;
+                    if(Result2[i+j]>9)
+                    {
+                                       k2=1;
+                                       Result2[j+i]=Result2[j+i]-10;
+                    }
+                    else
+                        k2=0;
+                    PreResult=Result2[i+j]+48;
+            }
+            Result2[i+j]=k+k2;
+    }
+    for(int i=(MaxLenght*2-1); i>=0; --i)
+    {
+            Result2[i]+=48;
+            fprintf(f3, "%c", Result2[i]);
+    }      
+    system("pause");
+    return 0;
+}
