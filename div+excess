@@ -181,8 +181,6 @@ int main()
 			else
 				break;
 		}
-		if(k>0&&(i!=File1Size-1))
-			fprintf(f3, "0");
 		s1=i;
 	}while( ((s1+File2Size)<=File1Size) && ( s2!=File1Size-1 ));
 	fprintf(f3, "\n\n\n");
