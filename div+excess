@@ -1,0 +1,195 @@
+#include "stdafx.h"
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    FILE *f1;
+    FILE *f2;
+    char *Number1, *Number2, *cDividend;
+    int MaxLenght, MinLenght, j, iStopDiv=3, PreResult, i, k;
+    int k2=0;
+    FILE *f3;
+    f1=fopen("1stNumb.txt", "r");
+    f2=fopen("2ndNumb.txt", "r");
+    f3=fopen("ResultNumb.txt", "w");
+    fclose(f3);
+    f3=fopen("ResultNumb.txt", "w+");
+    fseek(f1, 0, SEEK_END);
+    int File1Size=ftell(f1);
+    rewind(f1);
+    fseek(f2, 0, SEEK_END);
+    int File2Size=ftell(f2);
+    rewind(f2);
+    Number1 = new char [File1Size];
+    for(i=0; i<File1Size; ++i)
+  	fscanf(f1, "%c", &Number1[i]);
+    Number2 = new char [File2Size];
+    for(i=0; i<File2Size; ++i)
+		fscanf(f2, "%c", &Number2[i]);
+    if(File1Size<File2Size)
+    {
+		fprintf(f3, "0");
+		return 0;
+    }
+    if(File1Size==File2Size)
+    {
+		for(i=0; i<File1Size; ++i)
+        {
+			if(Number1[i]>Number2[i])
+				break;
+				else
+				{
+					if(Number1[i]<Number2[i])
+						{
+							fprintf(f3, "0");
+							fprintf(f3, "\n\n\n");
+							for(i=0; i<File1Size; ++i)
+								fprintf(f3, "%c", Number1[i]);
+							return 0;
+						}
+                }
+        }
+    }
+    
+    int s1=0, s2=File2Size-1; //s1 - left border, s2 - right border of dividend
+    do
+    {
+        j=0;
+		s2=s1+File2Size-1;
+        for(i=s1; i<s2; ++i)
+        {
+			if(Number1[i]<Number2[j])
+            {
+				s2++;
+				k2++;
+                break;
+			}
+            else
+				if(Number1[i]>Number2[j])
+					break;
+            j++;
+        }
+		if(k2>1)
+				fprintf(f3, "0");
+        PreResult=0;                 
+        do
+        {
+			iStopDiv=3;
+			j=File2Size;
+			
+
+
+			if((s2-s1)==File2Size-1)
+			{
+				for(i=s2; i>=s1; --i)
+				{
+					if(Number1[i]<Number2[j-1])
+					{
+						Number1[i]=Number1[i]+58-Number2[j-1];
+						Number1[i-1]=Number1[i-1]-1;
+					}
+					else
+						Number1[i]=Number1[i]-Number2[j-1]+48;
+					if(i==s1)
+					{
+						k=0;
+						for(int i2=s1; i2<=s2; i2++)
+						{
+							if(Number1[i2]>Number2[k])
+							{
+								iStopDiv=3;
+								break;
+							}
+							else
+								if(Number1[i2]<Number2[k])
+								{
+									iStopDiv=0;
+									break;
+								}
+							k++;
+						}
+					}
+					--j;
+				}
+			}
+			else
+			{
+				for(i=s2; i>s1; --i)
+				{
+					if(Number1[i]<Number2[j-1])
+					{
+						Number1[i]=Number1[i]+58-Number2[j-1];
+						Number1[i-1]=Number1[i-1]-1;
+					}
+					else
+						Number1[i]=Number1[i]-Number2[j-1]+48;
+					if(i==s1+1)
+					{
+						if(Number1[s1]!=48)
+							iStopDiv=3;
+						else
+						{
+							k=0;
+							for(int i2=s1+1; i2<=s2; i2++)
+							{
+								if(Number1[i2]>Number2[k])
+								{
+									iStopDiv=3;
+									break;
+								}
+								else
+									if(Number1[i2]<Number2[k])
+									{
+										iStopDiv=0;
+										break;
+									}
+								k++;
+							}
+						}
+					} 
+					--j;
+				}
+			}
+
+
+			PreResult++;
+			k=0;
+			k2=0;
+			for(i=s1; i<s2; i++)
+			{
+				if(Number1[i]==48)
+				{
+					++k;
+					++k2;
+				}
+				else
+					break;
+			}
+			s1+=k;
+		}while(iStopDiv!=0);
+		fprintf(f3, "%d", PreResult);
+		k=0;
+		for(i=s1; i<File1Size-1; i++)
+		{
+			if(Number1[i]==48)
+			{
+				fprintf(f3, "0");
+				k++;
+			}
+			else
+				break;
+		}
+		if(k>0&&(i!=File1Size-1))
+			fprintf(f3, "0");
+		s1=i;
+	}while( ((s1+File2Size)<=File1Size) && ( s2!=File1Size-1 ));
+	fprintf(f3, "\n\n\n");
+	for(i=0; i<File1Size; ++i)
+		if(Number1[i]!=48)
+			break;
+	for(j=i; j<File1Size; ++j)
+			fprintf(f3, "%c", Number1[j]);
+    return 0;
+}
