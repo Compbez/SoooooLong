@@ -6,7 +6,7 @@ int main()
 {
     FILE *f1;
     FILE *f2;
-    char *Number1, *Number2, *Result, *Result2, PreResult, *InvertNumber1, *InvertNumber2;
+    char *Number1, *Number2, Result=0, *Result2, PreResult, *InvertNumber1, *InvertNumber2;
     int MaxLenght, MinLenght, j;
     char k=0, k2=0;
     FILE *f3;
@@ -42,11 +42,9 @@ int main()
                                    Number1[i]=Number2[i];
                                    Number2[i]=PreResult;
                            }
-    Result = new char [MaxLenght*2];
     Result2 = new char [MaxLenght*2];
     for(int i=0; i<MaxLenght*2; ++i)
     {
-            Result[i]=0;
             Result2[i]=0;
     }
     
@@ -62,9 +60,9 @@ int main()
             k2=0;
             for(j=0; j<MaxLenght; ++j)
             {
-                    Result[i+j]=(InvertNumber1[j]-48)*(InvertNumber2[i]-48)+k;
-                    Result2[i+j]=Result2[i+j]+Result[i+j]%10+k2;
-                    k=Result[i+j]/10;
+                    Result=(InvertNumber1[j]-48)*(InvertNumber2[i]-48)+k;
+                    Result2[i+j]=Result2[i+j]+Result%10+k2;
+                    k=Result/10;
                     if(Result2[i+j]>9)
                     {
                                        k2=1;
