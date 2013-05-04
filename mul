@@ -70,7 +70,6 @@ int main()
                     }
                     else
                         k2=0;
-                    PreResult=Result2[i+j]+48;
             }
             Result2[i+j]=k+k2;
     }
