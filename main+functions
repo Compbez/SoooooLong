@@ -1,0 +1,646 @@
+#include <iostream.h>
+#include <stdio.h>
+#include <conio.h>
+
+using namespace std;
+
+int Addiction(char *Number1,int MaxLenght, char *Number2, int MinLenght, int iPosition);
+int Subtraction(char *Number1,int MaxLenght, char *Number2, int MinLenght, int iPosition);
+int Dividing(char *cNumb1, int Size1, char *cNumb2, int Size2, int iPosition, int Opetarion);
+int Multiplying(char *Number1,int MaxLenght, char *Number2, int MinLenght, int iPosition);
+
+int main()
+{
+    FILE *f1;
+    FILE *f2;
+    char *Number1, *InvertNumber1, *Number2, *InvertNumber2, *Result, *Result2, PreResult, *cReplace;
+    int MaxLenght, MinLenght, i, iPosition=0, Operation;
+    char k=0, k2=0;
+    f1=fopen("1stNumb.txt", "r");
+    f2=fopen("2ndNumb.txt", "r");
+    fseek(f1, 0, SEEK_END);
+    int File1Size=ftell(f1);
+    rewind(f1);
+    fseek(f2, 0, SEEK_END);
+    int File2Size=ftell(f2);
+    rewind(f2);
+    if(File2Size>File1Size)
+    {
+                           MaxLenght=File2Size;
+                           MinLenght=File1Size;
+    }
+    else
+    {
+        MaxLenght=File1Size;
+        MinLenght=File2Size;
+    }
+    Number1 = new char [MaxLenght];
+    for(i=0; i<File1Size; ++i)
+            fscanf(f1, "%c", &Number1[i]);
+    Number2 = new char [MaxLenght];
+    for(i=0; i<File2Size; ++i)
+            fscanf(f2, "%c", &Number2[i]); 
+    cout<<"Chose a operation:"<<endl;
+    int iOperation;
+    cout<<"1. Addiction"<<endl;
+    cout<<"2. Subtraction"<<endl;
+    cout<<"3. Dividing"<<endl;
+    cout<<"4. Multiplying"<<endl;
+    cin>>iOperation;
+    switch(iOperation)
+    {
+         case 1:
+              {
+                    if(Number1[0]!='-' && Number2[0]!='-')
+                    {
+                           iPosition=0;
+                           Addiction(Number1, File1Size, Number2, File2Size, iPosition);
+                    }
+                    if(Number1[0]!='-' && Number2[0]=='-')
+                    {
+                           iPosition=1;
+                           Subtraction(Number1, File1Size, Number2, File2Size, iPosition);
+                    }
+                    if(Number1[0]=='-' && Number2[0]!='-')
+                    {
+                           iPosition=2;
+                           Subtraction(Number1, File1Size, Number2, File2Size, iPosition);
+                    }
+                    if(Number1[0]=='-' && Number2[0]=='-')
+                    {
+                           iPosition=3;
+                           Addiction(Number1, File1Size, Number2, File2Size, iPosition);
+                    }
+                    break;
+              }
+         case 2:
+              {
+                   if(Number1[0]!='-' && Number2[0]!='-')
+                   {
+                           iPosition=0;
+                           Subtraction(Number1, File1Size, Number2, File2Size, iPosition);
+                   }
+                   if(Number1[0]!='-' && Number2[0]=='-')
+                   {
+                           iPosition=1;
+                           Addiction(Number1, File1Size, Number2, File2Size, iPosition);
+                   }
+                   if(Number1[0]=='-' && Number2[0]!='-')
+                   {
+                           iPosition=2;
+                           Addiction(Number1, File1Size, Number2, File2Size, iPosition);
+                   }
+                   if(Number1[0]=='-' && Number2[0]=='-')
+                   {
+                           iPosition=3;
+                           Subtraction(Number1, File1Size, Number2, File2Size, iPosition);
+                   }
+                   break;
+              }
+         case 3:
+              {
+                  Operation=0;
+                  if(Number1[0]!='-' && Number2[0]!='-')
+                  {
+                           iPosition=0;
+                           Dividing(Number1, File1Size, Number2, File2Size, iPosition, Operation);
+                  }
+                  if(Number1[0]!='-' && Number2[0]=='-')
+                  {
+                           iPosition=1;
+                           Dividing(Number1, File1Size, Number2, File2Size, iPosition, Operation);
+                  }
+                  if(Number1[0]=='-' && Number2[0]!='-')
+                   {
+                           iPosition=2;
+                           Dividing(Number1, File1Size, Number2, File2Size, iPosition, Operation);
+                   }
+                   if(Number1[0]=='-' && Number2[0]=='-')
+                   {
+                           iPosition=3;
+                           Dividing(Number1, File1Size, Number2, File2Size, iPosition, Operation);
+                   }
+                   break;
+              }
+         case 4:
+              {
+                  if(Number1[0]!='-' && Number2[0]!='-')
+                  {
+                           iPosition=0;
+                           Multiplying(Number1, File1Size, Number2, File2Size, iPosition);
+                  }
+                  if(Number1[0]!='-' && Number2[0]=='-')
+                  {
+                           iPosition=1;
+                           Multiplying(Number1, File1Size, Number2, File2Size, iPosition);
+                  }
+                  if(Number1[0]=='-' && Number2[0]!='-')
+                   {
+                           iPosition=2;
+                           Multiplying(Number1, File1Size, Number2, File2Size, iPosition);
+                   }
+                   if(Number1[0]=='-' && Number2[0]=='-')
+                   {
+                           iPosition=3;
+                           Multiplying(Number1, File1Size, Number2, File2Size, iPosition);
+                   }
+                   break;
+              }
+    }
+    system("pause");
+    return 0;
+}
+
+
+
+int Subtraction(char *Number1,int File1Size, char *Number2, int File2Size, int iPosition)
+{
+    FILE *f3;
+    f3=fopen("ResultNumb.txt", "w");
+    char *Result, PreResult, *InvertNumber1, *InvertNumber2;
+    int MaxLenght, MinLenght, i;
+    char k=0, k2=0;
+    if(iPosition==1)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+    }
+    if(iPosition==2)
+    {
+                   for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(iPosition==3)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+                    for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(File2Size>File1Size)
+    {
+                           MaxLenght=File2Size;
+                           MinLenght=File1Size;
+    }
+    else
+    {
+        MaxLenght=File1Size;
+        MinLenght=File2Size;
+    }
+    Result = new char [MaxLenght];
+    if(File2Size>File1Size)
+    {
+
+                           for(i=0; i<MaxLenght; ++i)
+                           {
+                                    PreResult=Number1[i];
+                                    Number1[i]=Number2[i];
+                                    Number2[i]=PreResult;
+                                    Result[i]=0;
+                           }
+    }
+    if( (File1Size>File2Size) && (iPosition==2 || iPosition==3))
+        fprintf(f3, "-");
+    if( (File1Size<File2Size) && (iPosition==0 || iPosition==1))
+        fprintf(f3, "-");
+    if(File1Size==File2Size)
+    {
+                            for(i=0; i<MaxLenght; ++i)
+                            {
+                                     if(Number1[i]>Number2[i])
+                                     {
+                                                              if(iPosition!=1 && iPosition!=0)
+                                                                              fprintf(f3, "-");
+                                                              break;
+                                     }
+                                     else
+                                     {
+                                         if(Number1[i]<Number2[i])
+                                         {
+                                                for(int j=0; j<MaxLenght; ++j)
+                                                {
+                                                      PreResult=Number1[j];
+                                                      Number1[j]=Number2[j];
+                                                      Number2[j]=PreResult;
+                                                 }
+                                                 if(iPosition==0 || iPosition==1)
+                                                                 fprintf(f3, "-");
+                                                 break;
+                                         }
+                                     }
+                            }
+    }
+     InvertNumber1 = new char [MaxLenght];
+     InvertNumber2 = new char [MaxLenght];
+    for(i=0; i<MaxLenght; ++i)
+             InvertNumber1[i]=Number1[MaxLenght-i-1];
+    for(i=0; i<MinLenght; ++i)
+             InvertNumber2[i]=Number2[MinLenght-i-1];        
+    for(i=0; i<MinLenght; ++i)
+    {
+             if(InvertNumber1[i]<InvertNumber2[i])
+             {
+                                      Result[i]=InvertNumber1[i]+58-InvertNumber2[i];
+                                      InvertNumber1[i+1]-=1;
+             }
+             else
+                 Result[i]=InvertNumber1[i]-InvertNumber2[i]+48;
+    }
+    for(i=MinLenght; i<MaxLenght; ++i)
+                     Result[i]=InvertNumber1[i];
+    for(i=0; i<MaxLenght; ++i)
+             fprintf(f3, "%c", Result[MaxLenght-i-1]);
+    return 0;
+}
+    
+    
+    
+    
+int Addiction(char *Number1,int File1Size, char *Number2, int File2Size, int iPosition)
+{
+    FILE *f3;
+    f3=fopen("ResultNumb.txt", "w");
+    char *InvertNumber1, *InvertNumber2, *Result;
+    int MaxLenght, MinLenght, i;
+    char k=0;
+    if(iPosition==1)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+    }
+    if(iPosition==2)
+    {
+                   for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(iPosition==3)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+                    for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(iPosition==3 || iPosition==2)
+                    fprintf(f3, "-");
+    if(File2Size>File1Size)
+    {
+                           MaxLenght=File2Size;
+                           MinLenght=File1Size;
+    }
+    else
+    {
+        MaxLenght=File1Size;
+        MinLenght=File2Size;
+    }
+    InvertNumber1 = new char [MaxLenght];
+    for(i=0; i<File1Size; ++i)
+            InvertNumber1[i]=Number1[File1Size-1-i];
+    InvertNumber2 = new char [MaxLenght];
+    for(i=0; i<File2Size; ++i)
+            InvertNumber2[i]=Number2[File2Size-1-i];
+    if(File2Size>File1Size)
+                           for(int i=0; i<MaxLenght; ++i)
+                           {
+                                   Number1[i]=InvertNumber1[i];
+                                   InvertNumber1[i]=InvertNumber2[i];
+                                   InvertNumber2[i]=Number1[i];
+                           }
+    Result = new char [MaxLenght+1];
+    for(i=0; i<MinLenght; ++i)
+    {
+            Result[i] = InvertNumber1[i]-48 + InvertNumber2[i] + k;
+            if(Result[i]>57)
+            {
+                           Result[i]=Result[i]-10;
+                           k=1;
+            }
+            else
+            k=0;
+    }
+    if(MaxLenght==MinLenght)
+    {
+                            Result[MaxLenght]=k+48;
+                            for(i=0; i<=MaxLenght; ++i)
+                                       Number1[i]=Result[MaxLenght-i];
+                            for(i=0; i<=MaxLenght; ++i)
+                                    fprintf(f3, "%c", Number1[i]);
+    }
+    else
+    {
+        for(i=MinLenght; i<MaxLenght; ++i)
+        {
+                 Result[i]=InvertNumber1[i]+k;
+                 if(Result[i]>57)
+                 {
+                                 Result[i]=Result[i]-10;
+                                 k=1;
+                                 }
+                                 else
+                                 k=0;
+        }
+        for(i=0; i<MaxLenght; ++i)
+                Number1[i]=Result[MaxLenght-i-1];
+        for(i=0; i<MaxLenght; ++i)
+                fprintf(f3, "%c", Number1[i]);
+    }
+    return 0;
+}
+
+
+
+int Multiplying(char *Number1,int File1Size, char *Number2, int File2Size, int iPosition)
+{
+    FILE *f3;
+    f3=fopen("ResultNumb.txt", "w");
+    char Result=0, *Result2, PreResult, *InvertNumber1, *InvertNumber2;
+    int MaxLenght, MinLenght, j, i;
+    char k=0, k2=0;
+    if(iPosition==1)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+    }
+    if(iPosition==2)
+    {
+                   for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(iPosition==3)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+                    for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(iPosition==1 || iPosition==2)
+                    fprintf(f3, "-");
+    if(File2Size>File1Size)
+    {
+                           MaxLenght=File2Size;
+                           MinLenght=File1Size;
+    }
+    else
+    {
+        MaxLenght=File1Size;
+        MinLenght=File2Size;
+    }
+    if(File2Size>File1Size)
+                           for(i=0; i<MaxLenght; ++i)
+                           {
+                                   PreResult=Number1[i];
+                                   Number1[i]=Number2[i];
+                                   Number2[i]=PreResult;
+                           }
+    Result2 = new char [MaxLenght*2];
+    for(i=0; i<MaxLenght*2; ++i)
+    {
+            Result2[i]=0;
+    }
+    
+    InvertNumber1 = new char [MaxLenght];
+    InvertNumber2 = new char [MaxLenght];
+    for(i=0; i<File1Size; ++i)
+            InvertNumber1[i]=Number1[File1Size-1-i];
+    for(i=0; i<File2Size; ++i)
+            InvertNumber2[i]=Number2[File2Size-1-i];
+    for(i=0; i<MinLenght; ++i)
+    {
+            k=0;
+            k2=0;
+            for(j=0; j<MaxLenght; ++j)
+            {
+                    Result=(InvertNumber1[j]-48)*(InvertNumber2[i]-48)+k;
+                    Result2[i+j]=Result2[i+j]+Result%10+k2;
+                    k=Result/10;
+                    if(Result2[i+j]>9)
+                    {
+                                       k2=1;
+                                       Result2[j+i]=Result2[j+i]-10;
+                    }
+                    else
+                        k2=0;
+            }
+            Result2[i+j]=k+k2;
+    }
+    for(i=(MaxLenght*2-1); i>=0; --i)
+    {
+            Result2[i]+=48;
+            fprintf(f3, "%c", Result2[i]);
+    }
+    return 0;
+}
+
+
+int Dividing(char *Number1,int File1Size, char *Number2, int File2Size, int iPosition, int Operation)
+{
+    FILE *f3;
+    f3=fopen("ResultNumb.txt", "w");
+    char *cDividend;
+    int MaxLenght, MinLenght, j, iStopDiv=3, PreResult, i, k;
+    int k2=0;
+    if(iPosition==1)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+    }
+    if(iPosition==2)
+    {
+                   for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(iPosition==3)
+    {
+                    for(i=0; i<File2Size-1; ++i)
+                             Number2[i]=Number2[i+1];
+                    --File2Size;
+                    for(i=0; i<File1Size-1; ++i)
+                             Number1[i]=Number1[i+1];
+                    --File1Size;
+    }
+    if(iPosition==1 || iPosition==2)
+                    fprintf(f3, "-");
+    if(File1Size<File2Size)
+    {
+     if(Operation==0)
+  	fprintf(f3, "0");
+     else
+         for(i=0; i<File1Size; ++i)
+                  fprintf(f3, "%c", Number1[i]);
+		return 0;
+    }
+    if(File1Size==File2Size)
+    {
+		for(i=0; i<File1Size; ++i)
+        {
+			if(Number1[i]>Number2[i])
+				break;
+				else
+				{
+					if(Number1[i]<Number2[i])
+						{
+                            if(Operation==0)
+							                fprintf(f3, "0");
+							else
+							    for(i=0; i<File1Size; ++i)
+								         fprintf(f3, "%c", Number1[i]);
+							return 0;
+						}
+                }
+        }
+    }
+    
+    int s1=0, s2=File2Size-1; //s1 - left border, s2 - right border of dividend
+    do
+    {
+        j=0;
+		s2=s1+File2Size-1;
+        for(i=s1; i<s2; ++i)
+        {
+			if(Number1[i]<Number2[j])
+            {
+				s2++;
+				k2++;
+                break;
+			}
+            else
+				if(Number1[i]>Number2[j])
+					break;
+            j++;
+        }
+		if(k2>1 && Operation==0)
+				fprintf(f3, "0");
+        PreResult=0;                 
+        do
+        {
+			iStopDiv=3;
+			j=File2Size;
+
+
+
+			if((s2-s1)==File2Size-1)
+			{
+				for(i=s2; i>=s1; --i)
+				{
+					if(Number1[i]<Number2[j-1])
+					{
+						Number1[i]=Number1[i]+58-Number2[j-1];
+						Number1[i-1]=Number1[i-1]-1;
+					}
+					else
+						Number1[i]=Number1[i]-Number2[j-1]+48;
+					if(i==s1)
+					{
+						k=0;
+						for(int i2=s1; i2<=s2; i2++)
+						{
+							if(Number1[i2]>Number2[k])
+							{
+								iStopDiv=3;
+								break;
+							}
+							else
+								if(Number1[i2]<Number2[k])
+								{
+									iStopDiv=0;
+									break;
+								}
+							k++;
+						}
+					}
+					--j;
+				}
+			}
+			else
+			{
+				for(i=s2; i>s1; --i)
+				{
+					if(Number1[i]<Number2[j-1])
+					{
+						Number1[i]=Number1[i]+58-Number2[j-1];
+						Number1[i-1]=Number1[i-1]-1;
+					}
+					else
+						Number1[i]=Number1[i]-Number2[j-1]+48;
+					if(i==s1+1)
+					{
+						if(Number1[s1]!=48)
+							iStopDiv=3;
+						else
+						{
+							k=0;
+							for(int i2=s1+1; i2<=s2; i2++)
+							{
+								if(Number1[i2]>Number2[k])
+								{
+									iStopDiv=3;
+									break;
+								}
+								else
+									if(Number1[i2]<Number2[k])
+									{
+										iStopDiv=0;
+										break;
+									}
+								k++;
+							}
+						}
+					} 
+					--j;
+				}
+			}
+
+
+			PreResult++;
+			k=0;
+			k2=0;
+			for(i=s1; i<s2; i++)
+			{
+				if(Number1[i]==48)
+				{
+					++k;
+					++k2;
+				}
+				else
+					break;
+			}
+			s1+=k;
+		}while(iStopDiv!=0);
+		if(Operation==0)
+		                fprintf(f3, "%d", PreResult);
+		k=0;
+		for(i=s1; i<File1Size-1; i++)
+		{
+			if(Number1[i]==48 && Operation==0)
+			{
+				fprintf(f3, "0");
+				k++;
+			}
+			else
+				break;
+		}
+		s1=i;
+	}while( ((s1+File2Size)<=File1Size) && ( s2!=File1Size-1 ));
+	if(Operation==1)
+	{
+       for(i=0; i<File1Size; ++i)
+		   if(Number1[i]!=48)
+			  break;
+	   for(j=i; j<File1Size; ++j)
+           fprintf(f3, "%c", Number1[j]);
+    }
+    return 0;
+}
