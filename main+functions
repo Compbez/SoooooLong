@@ -476,7 +476,7 @@ int Dividing(char *Number1,int File1Size, char *Number2, int File2Size, int iPos
     if(File1Size<File2Size)
     {
      if(Operation==0)
-  	fprintf(f3, "0");
+		fprintf(f3, "0");
      else
          for(i=0; i<File1Size; ++i)
                   fprintf(f3, "%c", Number1[i]);
